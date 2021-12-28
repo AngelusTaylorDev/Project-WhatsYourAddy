@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WhatsYourAddy.Data;
 using WhatsYourAddy.Models;
+using WhatsYourAddy.Services.Interfaces;
 
 namespace WhatsYourAddy.Controllers
 {
@@ -14,9 +15,14 @@ namespace WhatsYourAddy.Controllers
     {
         private readonly ApplicationDBContext _context;
 
-        public ContactsController(ApplicationDBContext context)
+        // Adding the image service to the constructor
+        private readonly IImageService _imageService;
+
+
+        public ContactsController(ApplicationDBContext context, IImageService imageService)
         {
             _context = context;
+            _imageService = imageService;
         }
 
         // GET: Contacts
@@ -54,10 +60,17 @@ namespace WhatsYourAddy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,Email,PhoneNumber,Address1,Address2,City,State,PostalCode,Date,ImageData,ImageType,Id")] Contact contact)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,Email,PhoneNumber,Address1,Address2,City,State,PostalCode,Date,ImageData,ImageType,ImageFile,Id")] Contact contact)
         {
             if (ModelState.IsValid)
             {
+                // Image service method call
+                if(contact.ImageFile != null)
+                {
+                    contact.ImageData = await _imageService.ConvertFileToByteArrayAsync(contact.ImageFile);
+                    contact.ImageType = contact.ImageFile.ContentType;
+                }
+
                 _context.Add(contact);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

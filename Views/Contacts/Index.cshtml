@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<WhatsYourAddy.Models.Contact>
 
+@* Injecting the Image service *@
+@inject WhatsYourAddy.Services.Interfaces.IImageService _imageService
+
+@* Adding a style sheet for the CloudTables *@
+<link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -9,9 +15,12 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table" id="contactTable">
     <thead>
         <tr>
+            <th>
+                Image
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
             </th>
@@ -42,18 +51,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.Date)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageData)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageType)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                <img class="img-thumbnail" src="@_imageService.ConvertByteArrayToFile(item.ImageData, item.ImageType)"/>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
@@ -85,12 +91,6 @@
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImageData)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageType)
-            </td>
-            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
@@ -99,3 +99,16 @@
 }
     </tbody>
 </table>
+
+@* Adding a script for the CloudTables *@
+@section scripts {
+    <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js" ></script>
+
+    @*Function*@
+    <script>
+        $(document).ready( function () {
+        $('#contactTable').DataTable();
+        });
+    </script>
+
+}

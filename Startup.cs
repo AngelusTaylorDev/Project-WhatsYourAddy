@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WhatsYourAddy.Data;
+using WhatsYourAddy.Services;
+using WhatsYourAddy.Services.Interfaces;
 
 namespace WhatsYourAddy
 {
@@ -29,6 +31,9 @@ namespace WhatsYourAddy
             // Adding the service DB Context - With the options: Npg Sql using the default connection string.
             services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllersWithViews();
+
+            // Adding the Image service - Scoped( Same as the request but Diffrent with diffrent request)
+            services.AddScoped<IImageService, BasicImageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
