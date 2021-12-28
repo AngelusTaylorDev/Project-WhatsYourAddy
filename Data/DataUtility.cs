@@ -39,4 +39,5 @@ namespace WhatsYourAddy.Data
 
             return builder.ToString();
         }
+    }
 }
