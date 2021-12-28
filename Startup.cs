@@ -28,8 +28,9 @@ namespace WhatsYourAddy
         public void ConfigureServices(IServiceCollection services)
         {
             // Regustering the service
-            // Adding the service DB Context - With the options: Npg Sql using the default connection string.
-            services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            // Adding the Huruku db call
+            // Adding the service DB Context - With the options: Npg Sql using the DataUtility connection string.
+            services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql(DataUtility.GetConnectionString(Configuration)));
             services.AddControllersWithViews();
 
             // Adding the Image service - Scoped( Same as the request but Diffrent with diffrent request)
