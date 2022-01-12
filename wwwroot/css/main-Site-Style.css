@@ -206,8 +206,12 @@ footer, img {
 /*******************
  Main Contact Style 
 *******************/
-.mainContactStyle{
+.mainContactStyle {
     margin-top: 60px;
+}
+
+#contactpadding {
+    padding: 13px;
 }
 
 #nameStyle {
